@@ -23,12 +23,17 @@ export default function OAuthButton({
   const handleLogin = async () => {
     try {
       setIsLoading(true)
+      
+      // Get the current URL origin to ensure proper redirects in all environments
+      const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
+      
       // Only create the Supabase client when the function is actually called
       const supabase = createClientComponentClient()
       await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: redirectTo || `${window.location.origin}/auth/callback`
+          // If redirectTo is provided, use it; otherwise use current origin with callback path
+          redirectTo: redirectTo || `${currentOrigin}/auth/callback`
         }
       })
     } catch (error) {
