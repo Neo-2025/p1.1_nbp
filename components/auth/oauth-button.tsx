@@ -18,11 +18,13 @@ export default function OAuthButton({
   redirectTo
 }: OAuthButtonProps) {
   const [isLoading, setIsLoading] = useState(false)
-  const supabase = createClientComponentClient()
-
+  
+  // Create Supabase client on demand to avoid build-time errors
   const handleLogin = async () => {
     try {
       setIsLoading(true)
+      // Only create the Supabase client when the function is actually called
+      const supabase = createClientComponentClient()
       await supabase.auth.signInWithOAuth({
         provider,
         options: {
